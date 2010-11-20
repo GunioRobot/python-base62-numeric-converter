@@ -47,8 +47,8 @@ class Base62NumericConverter:
        For example:  1523 (base 10) = 'oz' (base 62)
     """
     
-    charset = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    charset_re = re.compile('^[0-9a-zA-Z]+$')
+    _charset = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    _charset_re = re.compile('^[0-9a-zA-Z]+$')
     
     def convert_base10_to_base62(self, value):
         """Converts an int or long numeric value to 'base62'."""
@@ -74,7 +74,7 @@ class Base62NumericConverter:
         while column >= 0:
             col_value = 62 ** column            
             this_col = value / col_value # returns int or long            
-            result = result + self.charset[this_col]            
+            result = result + self._charset[this_col]            
             value = value - (this_col * col_value)            
             column -= 1
         
@@ -87,14 +87,14 @@ class Base62NumericConverter:
         if value.__class__ != str:
             raise TypeError('Supplied param must be a string')
         
-        if not self.charset_re.match(value):
+        if not self._charset_re.match(value):
             raise ValueError('Supplied param can only use chars 0-9, a-z and A-Z')
         
         current_power = len(value) - 1
         result = 0
         
         for char in value:
-            result += (62 ** current_power) * self.charset.find(char)
+            result += (62 ** current_power) * self._charset.find(char)
             current_power -= 1
         
         return result
