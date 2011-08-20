@@ -7,7 +7,8 @@ which is an alphabet of the digits 0-9, the characters a-z and the characters
 A-Z (and vice versa).  Can be used for example to reduce the length of or
 obfuscate primary key values held in URLs.
 
-Usage:
+Usage::
+
   >>> from Base62NumericConverter import Base62NumericConverter
   >>> c = Base62NumericConverter()
   >>> c.convert_base10_to_base62(28365423)
@@ -16,44 +17,26 @@ Usage:
   28365423
   >>> c.convert_base62_to_base10('454Fkjuceh287fy2euhf4f8F')
   685278132068474486425787053445629667052677L
-=================
 
-Copyright (c) 2010 Mark Henwood
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
 """
 import re
 class Base62NumericConverter:
-    """Converts NUMBERS to and from a 'base62' notation, i.e. uses digits 0 thru 9,
-       letters a thru z to denote place values of 10 thru 36, and letters
-       A thru Z to denote place values of 37 thru 62.
-       
-       For example:  1523 (base 10) = 'oz' (base 62)
     """
-    
+    Converts NUMBERS to and from a 'base62' notation.
+
+    i.e. uses digits 0 thru 9, letters a thru z to denote place values of 10
+    thru 36, and letters A thru Z to denote place values of 37 thru 62.
+       
+    For example:  1523 (base 10) = 'oz' (base 62)
+
+    """
     _charset = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
     _charset_re = re.compile('^[0-9a-zA-Z]+$')
     
     def convert_base10_to_base62(self, value):
         """Converts an int or long numeric value to 'base62'."""
         
-        if value.__class__ != int and value.__class__ != long:
+        if type(value) not in (int, long):
             raise TypeError('Supplied param must be an int or a long')
         
         if value < 0:
@@ -88,7 +71,7 @@ class Base62NumericConverter:
             raise TypeError('Supplied param must be a string')
         
         if not self._charset_re.match(value):
-            raise ValueError('Supplied param can only use chars 0-9, a-z and A-Z')
+            raise ValueError('Supplied param can only use chars 0-9, a-z, A-Z')
         
         current_power = len(value) - 1
         result = 0
@@ -98,4 +81,3 @@ class Base62NumericConverter:
             current_power -= 1
         
         return result
-    
